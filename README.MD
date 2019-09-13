@@ -16,7 +16,7 @@ This tool allows you to parse various strings into the desired format using a ho
 ```
 cd clip_parser
 
-pip install clip_parser
+pip install -e .
 ```
 
 ### Executing program
