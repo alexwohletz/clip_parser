@@ -2,6 +2,7 @@ from pynput.keyboard import Key, KeyCode, Listener
 import pyperclip
 from .rexp import expand_ranges
 import re
+import sys
 
 #Copy a code range a automagically paste a SQL ready statement!
 #SHFT-L
@@ -11,7 +12,7 @@ def parse_ranges():
     codes = re.findall(pattern=code_pat,string=txt)
     try:
         code_list = expand_ranges(codes)
-    except ValueError:
+    except:
         print('Could not iterate this range!')
         code_list = codes
     finally:
@@ -28,6 +29,10 @@ def grab_codes():
     codes = re.findall(pattern=code_pat,string=txt)
     pyperclip.copy(",".join(codes))
 
+def kill_program():
+    print("Program stopped...")
+    sys.exit(0)
+
 
 # Create a mapping of keys to function (use frozenset as sets are not hashable - so they can't be used as keys)
 combination_to_function = {
@@ -35,6 +40,7 @@ combination_to_function = {
     frozenset([Key.shift, KeyCode(char='C')]): grab_codes,
     frozenset([Key.shift, KeyCode(char='L')]): parse_ranges,
     frozenset([Key.shift, KeyCode(char='l')]): parse_ranges,
+    frozenset([Key.esc]): kill_program,
 }
 
 # Currently pressed keys
