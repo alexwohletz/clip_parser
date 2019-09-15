@@ -1,6 +1,7 @@
 from pynput.keyboard import Key, KeyCode, Listener
 import pyperclip
-from .rexp import expand_ranges
+from utils.rexp import expand_ranges
+from utils.translator import clean_where_clause
 import re
 import sys
 

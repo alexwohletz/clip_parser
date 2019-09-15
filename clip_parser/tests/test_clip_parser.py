@@ -1,5 +1,5 @@
 import pytest
-from clip_parser.clip_parser import parse_ranges,grab_codes,kill_program
+from clip_parser import parse_ranges,grab_codes,kill_program
 
 def test_parse_ranges():
     txt = '99281-99282'
