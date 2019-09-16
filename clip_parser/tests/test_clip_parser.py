@@ -1,5 +1,5 @@
 import pytest
-from clip_parser import parse_ranges,grab_codes,kill_program
+from clip_parser import parse_ranges,grab_codes,kill_program,clean_clause,parse_list
 
 def test_parse_ranges():
     txt = '99281-99282'
@@ -14,6 +14,14 @@ def test_parse_ranges():
     txt_4 = 'somethin not a range'
     assert parse_ranges(txt_4) == '(\n)'
 
+def test_parse_list():
+    txt = '82148,89542,83548'
+    assert parse_list(txt) == '''(
+                            '82148',
+                            '89542',
+                            '83548',
+                            )'''
+
 def test_grab_codes():
     txt = '''there is a random set of codes 
     in this block of text 97812
@@ -25,6 +33,18 @@ def test_grab_codes():
 
     assert grab_codes(txt_2) == []
 
+
+def test_clean_clause():
+    #TODO: Fix this test.
+    txt = \
+    '''
+    AND cp.from_something > '10301'
+    AND cx.procedurecode IN ('12910','1010')
+    AND cl.line LIKE 'approved%'
+    '''
+    assert clean_clause(txt=txt) == \
+        '''
+        '''
 
 def test_kill_program():
     with pytest.raises(SystemExit):

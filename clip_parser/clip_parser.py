@@ -1,7 +1,7 @@
 from pynput.keyboard import Key, KeyCode, Listener
 import pyperclip
-from utils.rexp import expand_ranges
-from utils.translator import clean_where_clause
+from utils import expand_ranges
+from utils import clean_where_clause
 import re
 import sys
 
@@ -22,6 +22,15 @@ def parse_ranges(txt=None):
         pyperclip.copy(msg)
         return msg
 
+# Copy a list and automagically paste a SQL ready statement!
+# SHFT-L      
+def parse_list(txt= None):
+    if not txt:
+        txt = pyperclip.paste()
+    msg = "(\n" + "".join(["'" + code + "',\n" for code in txt.split(',')]) + ")"
+    pyperclip.copy(msg)
+    return msg
+
 
 # Copy the text from which you wish to extract the text into your clipboard and then execute this script.
 # SHIFT-C
@@ -33,6 +42,17 @@ def grab_codes(txt=None):
     codes = re.findall(pattern=code_pat, string=txt)
     pyperclip.copy(",".join(codes))
     return codes
+
+
+# Copy the text from which you wish to extract the text into your clipboard and then execute this script.
+# SHIFT-W
+def clean_clause(txt=None):
+    if not txt:
+        txt = pyperclip.paste()
+    table = clean_where_clause(txt)
+    print(table)
+    pyperclip.copy(table)
+    return table
 
 
 def kill_program(txt=None):
@@ -48,6 +68,11 @@ combination_to_function = {
     frozenset([Key.shift, KeyCode(char="C")]): grab_codes,
     frozenset([Key.shift, KeyCode(char="L")]): parse_ranges,
     frozenset([Key.shift, KeyCode(char="l")]): parse_ranges,
+    frozenset([Key.shift, KeyCode(char="w")]): clean_clause,
+    frozenset([Key.shift, KeyCode(char="W")]): clean_clause,
+    frozenset([Key.shift, KeyCode(char="P")]): parse_list,
+    frozenset([Key.shift, KeyCode(char="p")]): parse_list,
+
     frozenset([Key.esc]): kill_program,
 }
 

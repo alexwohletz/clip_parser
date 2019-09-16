@@ -4,8 +4,6 @@ Created on Fri Jan 25 19:20:28 2019
 
 @author: awohl
 """
-import pandas as pd
-
 
 def expand_ranges(row):
     '''Function to add ranges to a given tuple of codes where a discrete mathmatical distance exists between the first and the second.
@@ -145,26 +143,4 @@ def expand_ranges(row):
                         codes.append(code)
                         
     return codes
-
-    
-def add_ranges(df):
-    '''Function to find the ranges in a given dataframe with 'begin' and 'end' procedurecode columns.
-    Args:
-        df (dataframe): A pandas dataframe.
-    Returns:
-        dataframe: A concatenation of the old frame with new expanded code ranges.
-    '''
-    ranges = df[df.begin_procedurecode_ud != df.end_procedurecode_ud]
-    no_ranges = df[df.begin_procedurecode_ud == df.end_procedurecode_ud]
-    
-    l = []
-    for ind,row in ranges.iterrows():
-        expanded = expand_ranges(row)
-        l += expanded
-    
-    lser = pd.Series(l)
-    a = ranges.begin_procedurecode_ud.append(lser, ignore_index = True).drop_duplicates()
-    expanded = pd.DataFrame({'begin_procedurecode_ud':a,'end_procedurecode_ud':a})
-    return pd.concat([no_ranges,expanded]).astype(str).drop_duplicates().sort_values(by=['begin_procedurecode_ud']).reset_index(drop = True)
-
 
